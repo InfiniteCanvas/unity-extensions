@@ -8,6 +8,18 @@ using UnityEngine;
 
 namespace UnityExtensions.ScriptableObjects.Editor;
 
+/// <summary>
+/// The wrapper template needs to look something like this:
+/// #USINGS#
+/// namespace #NAMESPACE#
+/// {
+///     [System.Serializable]
+///     [CreateAssetMenu(fileName = "#NAME#Variable", menuName = "Wrappers/#NAME#", order = -10000)]
+///     public class #NAME#Wrapper : Wrapper<#TYPE#>
+///     {
+///     }
+/// }
+/// </summary>
 public class WrapperGenerator : OdinEditorWindow
 {
     [BoxGroup("Generate Type Wrapper")]

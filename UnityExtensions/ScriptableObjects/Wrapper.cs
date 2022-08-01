@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
 namespace UnityExtensions.ScriptableObjects;
 
+[InlineEditor, Serializable]
 public abstract class Wrapper<TSource> : ScriptableObject, IEquatable<Wrapper<TSource>>
 {
-    [OdinSerialize]
     public TSource Value { get; set; }
 
     public Wrapper(TSource value) { Value = value; }
