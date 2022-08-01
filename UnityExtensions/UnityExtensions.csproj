@@ -70,9 +70,11 @@
         <Compile Include="ScriptableObjects\Editor\WrapperGenerator.cs" />
         <Compile Include="ScriptableObjects\Wrapper.cs" />
         <Compile Include="StringExtensions.cs" />
-        <Compile Include="Utilities\ObjectPool.cs" />
-        <Compile Include="Utilities\ObjectPoolExtensions.cs" />
+        <Compile Include="Utilities\Pools.cs" />
+        <Compile Include="Utilities\PoolExtensions.cs" />
         <Compile Include="Utilities\Miscellaneous.cs" />
+        <Compile Include="Utilities\Pool.cs" />
+        <Compile Include="Utilities\PoolObject.cs" />
         <Compile Include="Vector2Extensions.cs" />
         <Compile Include="Vector3Extensions.cs" />
     </ItemGroup>

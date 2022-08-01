@@ -4,15 +4,6 @@ using System.Linq;
 
 namespace UnityExtensions.Utilities;
 
-public class PoolObject<TSource> where TSource : new()
-{
-    public PoolObject(TSource value) => Value = value;
-
-    public TSource Value { get; }
-
-    public static implicit operator TSource(PoolObject<TSource> poolObject) => poolObject.Value;
-}
-
 public class Pool<TSource> where TSource : new()
 {
     private readonly Stack<PoolObject<TSource>>   _availablePoolObjects;
@@ -113,33 +104,5 @@ public class Pool<TSource> where TSource : new()
             Add(new PoolObject<TSource>(_factory()));
             i++;
         }
-    }
-}
-
-public static class Pools<TSource> where TSource : new()
-{
-    public static Dictionary<string, Pool<TSource>> PoolsDict { get; } = new();
-
-    public static IEnumerable<string> PoolNames => PoolsDict.Keys;
-
-    public static Pool<TSource> GetOrCreatePool(string name = "", Func<TSource>? factory = null) =>
-        PoolsDict.TryGetValue(name, out Pool<TSource> pool) switch
-        {
-            true  => pool!,
-            false => CreateNewPool(name, factory ?? (() => new TSource())),
-        };
-
-    public static Pool<TSource> CreateNewPool(string name = "", Func<TSource>? factory = null)
-    {
-        var pool = new Pool<TSource>(factory ?? (() => new TSource()));
-        PoolsDict.Add(name, pool);
-        return pool;
-    }
-
-    public static Pool<TSource> CreateNewPool(string name, Func<TSource> factory, int initialSize)
-    {
-        Pool<TSource> pool = CreateNewPool(name, factory);
-        pool.Create(initialSize);
-        return pool;
     }
 }

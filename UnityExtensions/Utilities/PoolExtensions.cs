@@ -2,7 +2,7 @@ using System;
 
 namespace UnityExtensions.Utilities;
 
-public static class ObjectPoolExtensions
+public static class PoolExtensions
 {
     public static PoolObject<TSource> MakePoolable<TSource>(this TSource source) where TSource : new() => new(source);
 
