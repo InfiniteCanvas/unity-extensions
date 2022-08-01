@@ -54,7 +54,7 @@ namespace #NAMESPACE#
 {
     [System.Serializable]
     [CreateAssetMenu(fileName = ""#NAME#Variable"", menuName = ""Wrappers/#NAME#"", order = -10000)]
-    public class #NAME#Wrapper : TypeWrapper<#TYPE#>
+    public class #NAME#Wrapper : Wrapper<#TYPE#>
     {
     }
 }";
