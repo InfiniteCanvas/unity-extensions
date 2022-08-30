@@ -15,7 +15,6 @@ public class Pool<TSource> where TSource : new()
         _factory = factory;
         _availablePoolObjects = new Stack<PoolObject<TSource>>();
         _totalPoolObjects = new HashSet<PoolObject<TSource>>();
-        ObjectAddedEvent += o => _totalPoolObjects.Add(o);
     }
 
     public int Count => _availablePoolObjects.Count;
@@ -82,8 +81,10 @@ public class Pool<TSource> where TSource : new()
 
         if (InPool(obj)) return false;
 
-        OnObjectAdded(obj);
+        _totalPoolObjects.Add(obj);
         _availablePoolObjects.Push(obj);
+        OnObjectAdded(obj);
+        
         return true;
     }
 
@@ -91,7 +92,7 @@ public class Pool<TSource> where TSource : new()
 
     public bool IsAvailable(PoolObject<TSource> obj) => _availablePoolObjects.Contains(obj);
 
-    public bool Add(IEnumerable<TSource> sources) => sources.Select(Add).All(added => added);
+    public IEnumerable<bool> Add(IEnumerable<TSource> sources) => sources.Select(Add);
 
     public void Clear() => _availablePoolObjects.Clear();
 
@@ -101,8 +102,9 @@ public class Pool<TSource> where TSource : new()
         var i = 0;
         while (i < count)
         {
-            Add(new PoolObject<TSource>(_factory()));
-            i++;
+            // only increase on successful add
+            if(Add(_factory()))
+                i++;
         }
     }
 }
