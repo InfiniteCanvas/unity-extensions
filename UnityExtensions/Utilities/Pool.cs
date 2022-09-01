@@ -52,9 +52,7 @@ public class Pool<TSource> where TSource : new()
     ///     <br /> If no <see cref="PoolObject{TSource}" /> is available, a new one is created and
     ///     <see cref="ObjectAddedEvent" /> is also called.
     /// </summary>
-    /// <returns>
-    ///     <see cref="PoolObject{TSource}" />
-    /// </returns>
+    /// <returns> <see cref="PoolObject{TSource}" /> </returns>
     public PoolObject<TSource> Spawn() =>
         Available switch
         {
@@ -68,7 +66,7 @@ public class Pool<TSource> where TSource : new()
     ///     <br /> Beware that the objects are spawned lazily with yield.
     /// </summary>
     /// <param name="amount"> Number of objects to spawn</param>
-    /// <returns> Returns a range of <see cref="PoolObject{TSource}" /> </returns>
+    /// <returns> A collection of <see cref="PoolObject{TSource}"/> </returns>
     public IEnumerable<PoolObject<TSource>> Spawn(int amount)
     {
         for (var i = 0; i < amount; i++) yield return Spawn();
@@ -76,22 +74,28 @@ public class Pool<TSource> where TSource : new()
 
     /// <summary>
     ///     Despawns a <see cref="PoolObject{TSource}" /> to the pool and calls <see cref="DespawnEvent" />
-    ///     If not already in the pool, will call <see cref="Add(TSource)" /> on the object first
+    ///     If not already in the pool, will call <see cref="Add(TSource)" /> on the object first.
+    ///     <br/> If already in the pool, but already despawned, it will do nothing.
     /// </summary>
     /// <param name="obj"> Object to despawn to the pool </param>
-    public void Despawn(PoolObject<TSource> obj)
+    /// <returns>
+    /// true - if on the available stack <br/>
+    /// false - if not on the available stack (already despawned)
+    /// </returns>
+    public bool Despawn(PoolObject<TSource> obj)
     {
         if (InPool(obj))
         {
+            if (IsAvailable(obj)) return false;
             OnDespawn(obj);
             _availablePoolObjects.Push(obj);
+            return true;
         }
-        else
-        {
-            Add(obj);
-            OnDespawn(obj);
-            _availablePoolObjects.Push(obj);
-        }
+        
+        Add(obj);
+        OnDespawn(obj);
+        _availablePoolObjects.Push(obj);
+        return true;
     }
 
     /// <summary>
@@ -99,16 +103,39 @@ public class Pool<TSource> where TSource : new()
     ///     <see cref="PoolObject{TSource}" />
     /// </summary>
     /// <param name="objs"> Objects to despawn </param>
-    public void Despawn(IEnumerable<PoolObject<TSource>> objs) => objs.ForEach(Despawn);
-
-    public void DespawnAll()
+    public IEnumerable<bool> Despawn(IEnumerable<PoolObject<TSource>> objs) => objs.Select(Despawn);
+    
+    /// <summary>
+    /// Despawns the whole pool.
+    /// </summary>
+    /// <param name="onlyAvailable">
+    /// true - only despawns the available stack. <br/>
+    /// false - clears stack and despawns all pooled objects.
+    /// </param>
+    public void DespawnAll(bool onlyAvailable = true)
     {
-        foreach (PoolObject<TSource> obj in _totalPoolObjects) Despawn(obj);
+        if (onlyAvailable)
+            foreach (var poolObject in _availablePoolObjects)
+                Despawn(poolObject);
+        else
+        {
+            _availablePoolObjects.Clear();
+            foreach (var poolObject in _totalPoolObjects) 
+                Despawn(poolObject);
+        }
     }
 
+    /// <summary>
+    /// Adds an object instance to the pool.
+    /// </summary>
+    /// <param name="source"> Instance to add. </param>
+    /// <returns>
+    /// true - object was added <br/>
+    /// false - object already in pool
+    /// </returns>
     public bool Add(TSource source)
     {
-        PoolObject<TSource> obj = source.MakePoolable();
+        PoolObject<TSource> obj = new PoolObject<TSource>(source);
 
         if (InPool(obj)) return false;
 
@@ -119,6 +146,14 @@ public class Pool<TSource> where TSource : new()
         return true;
     }
 
+    /// <summary>
+    /// Adds a <see cref="PoolObject{TSource}"/> to the pool.
+    /// </summary>
+    /// <param name="source"> Instance to add. </param>
+    /// <returns>
+    /// true - object was added <br/>
+    /// false - object already in pool
+    /// </returns>
     public bool Add(PoolObject<TSource> source)
     {
         if (InPool(source)) return false;
@@ -131,9 +166,18 @@ public class Pool<TSource> where TSource : new()
     }
 
 
+    /// <summary>
+    /// Calls <see cref="Add(TSource)"/> on a range of objects.
+    /// </summary>
+    /// <param name="sources"> Collection to add </param>
+    /// <returns> Collection of successes and failures for the <see cref="Add(TSource)"/> calls </returns>
     public IEnumerable<bool> Add(IEnumerable<TSource> sources) => sources.Select(Add);
 
-    public void Create(int count)
+    /// <summary>
+    /// Creates and adds object instances to the pool using the provided factory.
+    /// </summary>
+    /// <param name="count"> Amount of objects to instantiate and add. </param>
+    public void CreateObjects(int count)
     {
         // while loop in case of hash conflicts
         var i = 0;
