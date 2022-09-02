@@ -1,16 +1,28 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace UnityExtensions.ScriptableObjects;
 
-[InlineEditor, Serializable]
+[Serializable]
 public abstract class Wrapper<TSource> : ScriptableObject, IEquatable<Wrapper<TSource>>
 {
+    public Wrapper(TSource value) => Value = value;
+
+    [OdinSerialize, InlineEditor] 
     public TSource Value { get; set; }
 
-    public Wrapper(TSource value) { Value = value; }
+    public bool Equals(Wrapper<TSource>? other) =>
+        (this, other) switch
+        {
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => ReferenceEquals(this, other)
+                   || EqualityComparer<TSource>.Default
+                                               .Equals(Value, other.Value),
+        };
 
     public static implicit operator TSource(Wrapper<TSource> source) => source.Value;
 
@@ -22,16 +34,6 @@ public abstract class Wrapper<TSource> : ScriptableObject, IEquatable<Wrapper<TS
             (_, _) => ReferenceEquals(a, b)
                    || EqualityComparer<TSource>.Default
                                                .Equals(a.Value, b.Value),
-        };
-
-    public bool Equals(Wrapper<TSource>? other) =>
-        (this, other) switch
-        {
-            (null, _) => false,
-            (_, null) => false,
-            (_, _) => ReferenceEquals(this, other)
-                   || EqualityComparer<TSource>.Default
-                                               .Equals(Value, other.Value),
         };
 
     public override bool Equals(object? obj)

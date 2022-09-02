@@ -9,26 +9,25 @@ using UnityEngine;
 namespace UnityExtensions.ScriptableObjects.Editor;
 
 /// <summary>
-/// The wrapper template needs to look something like this:
-/// #USINGS#
-/// namespace #NAMESPACE#
-/// {
+///     The wrapper template needs to look something like this:
+///     #USINGS#
+///     namespace #NAMESPACE#
+///     {
 ///     [System.Serializable]
 ///     [CreateAssetMenu(fileName = "#NAME#Variable", menuName = "Wrappers/#NAME#", order = -10000)]
-///     public class #NAME#Wrapper : Wrapper<#TYPE#>
-///     {
-///     }
-/// }
+///     public class #NAME#Wrapper : Wrapper
+///     <#TYPE#>
+///         {
+///         }
+///         }
 /// </summary>
 public class WrapperGenerator : OdinEditorWindow
 {
-    [BoxGroup("Generate Type Wrapper")]
-    [LabelText("Type in Class:")]
-    [Required]
-    [ValidateInput("MustBeValidType", "Couldn't find type, but you probably know what you're doing")]
+    [BoxGroup("Generate Type Wrapper"), LabelText("Type in Class:"), Required,
+     ValidateInput("MustBeValidType", "Couldn't find type, but you probably know what you're doing")]
     public string ClassName;
 
-    [Sirenix.OdinInspector.FilePath] [LabelText("Wrapper template")]
+    [Sirenix.OdinInspector.FilePath, LabelText("Wrapper template")] 
     public string TemplatePath;
 
     [BoxGroup("Generate Type Wrapper")] public string[] Usings    = { "UnityEngine", "System" };
@@ -49,8 +48,7 @@ public class WrapperGenerator : OdinEditorWindow
     private bool MustBeValidType(string type) =>
         PathsToCheck.Any(x => Type.GetType($"{x.@namespace}.{ClassName}, {x.assembly}") != null);
 
-    [BoxGroup("Generate Type Wrapper")]
-    [Button]
+    [BoxGroup("Generate Type Wrapper"), Button]
     private void GenerateClass()
     {
         string upperCaseClassName = FirstLetterToUpperCaseOrConvertNullToEmptyString(ClassName);
@@ -76,7 +74,7 @@ namespace #NAMESPACE#
                                    .Replace("#NAMESPACE#", NameSpace)
                                    .Replace("#USINGS#",    usings);
 
-        string[] pathStrings = new[] { Application.dataPath, "_Code", "Common" };
+        string[] pathStrings = { Application.dataPath, "_Code", "Common" };
         string path = Path.Combine(pathStrings);
 
         string filePath = Path.Combine(path, $"{upperCaseClassName}Wrapper.cs");

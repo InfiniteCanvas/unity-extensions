@@ -1,3 +1,4 @@
+#if USE_MISC
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,3 +39,4 @@ public static class Miscellaneous
         return stopwatch.Elapsed.TotalMilliseconds;
     }
 }
+#endif
