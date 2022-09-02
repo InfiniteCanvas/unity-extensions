@@ -9,7 +9,7 @@ namespace UnityExtensions.ScriptableObjects;
 /// </summary>
 /// <typeparam name="TIncoming"> The type of <see cref="EventWrapper{TSource}" /> to consume </typeparam>
 /// <typeparam name="TOutgoing"> The type of <see cref="EventWrapper{TSource}" /> to raise </typeparam>
-public abstract class EventReactionBase<TIncoming, TOutgoing> : ScriptableObject
+public abstract class EventConsumerProducerBase<TIncoming, TOutgoing> : ScriptableObject
 {
     /// <summary>
     ///     Incoming events to consume
