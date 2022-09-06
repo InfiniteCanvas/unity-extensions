@@ -1,12 +1,13 @@
 using UnityEngine;
 
-namespace UnityExtensions;
-
-public static class StringExtensions
+namespace UnityExtensions
 {
-    public static void Log(this string str) => Debug.Log(str);
+    public static class StringExtensions
+    {
+        public static void Log(this string str) => Debug.Log(str);
 
-    public static void LogError(this string str) => Debug.LogError(str);
+        public static void LogError(this string str) => Debug.LogError(str);
 
-    public static void LogWarning(this string str) => Debug.LogWarning(str);
+        public static void LogWarning(this string str) => Debug.LogWarning(str);
+    }
 }

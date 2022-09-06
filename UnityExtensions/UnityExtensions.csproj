@@ -11,7 +11,7 @@
         <AssemblyName>UnityExtensions</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>9</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -35,31 +35,31 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Sirenix.OdinInspector.Attributes">
-            <HintPath>..\..\mindbane\mindbane-unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
+            <HintPath>H:\Assemblies\Sirenix\Assemblies\Sirenix.OdinInspector.Attributes.dll</HintPath>
         </Reference>
         <Reference Include="Sirenix.OdinInspector.Editor">
-            <HintPath>..\..\mindbane\mindbane-unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
+            <HintPath>H:\Assemblies\Sirenix\Assemblies\Sirenix.OdinInspector.Editor.dll</HintPath>
         </Reference>
         <Reference Include="Sirenix.Serialization">
-            <HintPath>..\..\mindbane\mindbane-unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
+            <HintPath>H:\Assemblies\Sirenix\Assemblies\Sirenix.Serialization.dll</HintPath>
         </Reference>
         <Reference Include="Sirenix.Serialization.Config">
-            <HintPath>..\..\mindbane\mindbane-unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
+            <HintPath>H:\Assemblies\Sirenix\Assemblies\Sirenix.Serialization.Config.dll</HintPath>
         </Reference>
         <Reference Include="Sirenix.Utilities">
-            <HintPath>..\..\mindbane\mindbane-unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
+            <HintPath>H:\Assemblies\Sirenix\Assemblies\Sirenix.Utilities.dll</HintPath>
         </Reference>
         <Reference Include="Sirenix.Utilities.Editor">
-            <HintPath>..\..\mindbane\mindbane-unity\Assets\Plugins\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
+            <HintPath>H:\Assemblies\Sirenix\Assemblies\Sirenix.Utilities.Editor.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Xml" />
         <Reference Include="UnityEditor">
-            <HintPath>..\..\..\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+            <HintPath>H:\Assemblies\Unity\Managed\UnityEditor.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine">
-            <HintPath>C:/Users/ChaloemseemaA/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+            <HintPath>H:\Assemblies\Unity\Managed\UnityEngine.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -67,7 +67,6 @@
         <Compile Include="BoolExtensions.cs" />
         <Compile Include="EnumerableExtensions.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="ScriptableObjects\Editor\WrapperGenerator.cs" />
         <Compile Include="ScriptableObjects\EventConsumerBase.cs" />
         <Compile Include="ScriptableObjects\EventConsumerProducerBase.cs" />
         <Compile Include="ScriptableObjects\EventWrapper.cs" />
