@@ -10,10 +10,14 @@ namespace UnityExtensions
     {
         public static float DistanceTo(this Vector3 from, Vector3 to) => Vector3.Distance(from, to);
 
-        public static float[] DistanceTo(this Vector3 from, IEnumerable<Vector3> to)
+        public static float[] DistanceTo(this Vector3         from,
+                                         IEnumerable<Vector3> to,
+                                         bool                 useJobs = false,
+                                         int                  batch   = 16)
         {
+            if (!useJobs) return to.Select(v => v.DistanceTo(from)).ToArray();
             // allocate
-            var targets = to.ToArray();
+            Vector3[] targets = to.ToArray();
             var lenght = targets.Length;
             var input = new NativeArray<Vector3>(lenght, Allocator.TempJob);
             for (var i = 0; i < lenght; i++) input[i] = targets[i];
@@ -21,7 +25,7 @@ namespace UnityExtensions
             var job = new DistanceJob { _input = input, _output = output, _referencePoint = from };
 
             // schedule and wait for completion
-            job.Schedule(output.Length, 16).Complete();
+            job.Schedule(output.Length, batch).Complete();
 
             // save result and dispose allocations
             var result = output.ToArray();
