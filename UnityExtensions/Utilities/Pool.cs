@@ -40,7 +40,7 @@ namespace UnityExtensions.Utilities
         /// <returns> <see cref="PoolObject{TSource}" /> by provided factory </returns>
         private PoolObject<TSource> SpawnNewObject()
         {
-            TSource? obj = _factory();
+            var obj = _factory();
             var poolObj = new PoolObject<TSource>(obj);
             Add(obj);
             OnSpawn(poolObj);

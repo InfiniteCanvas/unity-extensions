@@ -1,46 +1,33 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Unity.Collections;
 using Unity.Jobs;
-using Random = UnityEngine.Random;
+using UnityEngine;
 
 namespace UnityExtensions
 {
     public static class Vector3Extensions
     {
-        private struct DistanceJob : IJobParallelFor
-        {
-            [ReadOnly]
-            internal NativeArray<Vector3> _input;
-            [ReadOnly]
-            internal Vector3 _referencePoint;
-            [WriteOnly]
-            internal NativeArray<float> _output;
-
-            public void Execute(int index) => _output[index] = Vector3.Distance(_input[index], _referencePoint);
-        }
-        
         public static float DistanceTo(this Vector3 from, Vector3 to) => Vector3.Distance(from, to);
 
         public static float[] DistanceTo(this Vector3 from, IEnumerable<Vector3> to)
         {
             // allocate
             var targets = to.ToArray();
-            int lenght = targets.Length;
+            var lenght = targets.Length;
             var input = new NativeArray<Vector3>(lenght, Allocator.TempJob);
             for (var i = 0; i < lenght; i++) input[i] = targets[i];
             var output = new NativeArray<float>(lenght, Allocator.TempJob);
             var job = new DistanceJob { _input = input, _output = output, _referencePoint = from };
-            
+
             // schedule and wait for completion
             job.Schedule(output.Length, 16).Complete();
-            
+
             // save result and dispose allocations
             var result = output.ToArray();
             input.Dispose();
             output.Dispose();
-            
+
             return result;
         }
 
@@ -70,6 +57,17 @@ namespace UnityExtensions
                 Random.Range(a.y, b.y),
                 Random.Range(a.z, b.z));
 
+        public static Vector3 RandomOnLineBetween(this Vector3 a, Vector3 b) => a + (b - a) * Random.value;
+
         public static Quaternion RotationTo(this Vector3 from, Vector3 to) => Quaternion.FromToRotation(from, to);
+
+        private struct DistanceJob : IJobParallelFor
+        {
+            [ReadOnly]  internal NativeArray<Vector3> _input;
+            [ReadOnly]  internal Vector3              _referencePoint;
+            [WriteOnly] internal NativeArray<float>   _output;
+
+            public void Execute(int index) => _output[index] = Vector3.Distance(_input[index], _referencePoint);
+        }
     }
 }

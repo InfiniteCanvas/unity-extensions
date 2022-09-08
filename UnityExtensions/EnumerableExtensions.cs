@@ -63,7 +63,7 @@ namespace UnityExtensions
         /// <typeparam name="TSource"> The type of the elements in the collection. </typeparam>
         public static void ForEach<TSource>(this IEnumerable<TSource> collection, Action<TSource> action)
         {
-            foreach (TSource item in collection) action(item);
+            foreach (var item in collection) action(item);
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace UnityExtensions
                                                             Func<TSource, TResult, TResult> reduce,
                                                             TResult                         initial)
         {
-            TResult? result = initial;
-            foreach (TSource item in collection) result = reduce(item, result);
+            var result = initial;
+            foreach (var item in collection) result = reduce(item, result);
             return result;
         }
 
@@ -99,8 +99,8 @@ namespace UnityExtensions
                                                              Func<TSource, TResult, TResult> reduce,
                                                              TResult                         initial)
         {
-            TResult? result = initial;
-            foreach (TSource item in collection.Reverse()) result = reduce(item, result);
+            var result = initial;
+            foreach (var item in collection.Reverse()) result = reduce(item, result);
             return result;
         }
 
@@ -133,8 +133,8 @@ namespace UnityExtensions
         {
             ArraySegment<TSource> batch;
             TSource[] source = collection.ToArray();
-            int batchCount = source.Length / batchSize;
-            int remainder = source.Length  % batchSize;
+            var batchCount = source.Length / batchSize;
+            var remainder = source.Length  % batchSize;
 
             for (var currentBatch = 0; currentBatch < batchCount; currentBatch++)
             {
